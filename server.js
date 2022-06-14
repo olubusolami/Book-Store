@@ -4,6 +4,9 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const connection = require("./db");
+const homeRoute = require("./routes/home");
+const bookRoute = require("./routes/book");
+const adminRoute = require("./routes/admin");
 
 (async function db() {
   await connection();
@@ -28,6 +31,12 @@ app.use(function (req, res, next) {
 //middleware
 app.use(express.json());
 
+//Routes
+app.get("/", homeRoute);
+app.use("/admin", adminRoute);
+app.use("/books", bookRoute);
+
+//404 error
 app.use((req, res, next) => {
   res.status(404).json({
     message: "Ohh you are lost, tap back to find your way ASAP",
@@ -35,4 +44,4 @@ app.use((req, res, next) => {
 });
 
 port = process.env.PORT || 4000;
-app.listen(port, () => console.log("connected successfully"));
+app.listen(port, () => console.log("listening carefully"));
