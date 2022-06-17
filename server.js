@@ -7,6 +7,7 @@ const connection = require("./db");
 const homeRoute = require("./routes/home");
 const bookRoute = require("./routes/book");
 const adminRoute = require("./routes/admin");
+const userRoute = require("./routes/user");
 
 (async function db() {
   await connection();
@@ -34,6 +35,7 @@ app.use(express.json());
 //Routes
 app.get("/", homeRoute);
 app.use("/admin", adminRoute);
+app.use("/user", userRoute);
 app.use("/books", bookRoute);
 
 //404 error
