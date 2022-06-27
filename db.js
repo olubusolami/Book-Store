@@ -3,7 +3,7 @@ let DB_CONNECT = process.env.DB_CONNECT;
 
 module.exports = async function connection() {
   try {
-    await mongoose.connect(
+    mongoose.connect(
       DB_CONNECT,
       {
         useNewUrlParser: true,

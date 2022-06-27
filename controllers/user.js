@@ -1,6 +1,7 @@
 const User = require("../model/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { generateToken } = require("../middleware/auth");
 
 //register;
 exports.createUser = async function (req, res) {
@@ -35,5 +36,14 @@ exports.loginUser = async function (req, res) {
   //password check
   const validPass = await bcrypt.compareSync(req.body.password, user.password);
   if (!validPass) return res.status(400).json("invalid password");
-  return res.status(200).json({ user: "Login successful, read on." });
+
+  try {
+    const { token, error } = await generateToken(user);
+    res.status(200).json({
+      data: user,
+      token,
+    });
+  } catch (err) {
+    res.status(400).json({ message: "bad request" });
+  }
 };

@@ -1,6 +1,7 @@
 const Admin = require("../model/admin");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { generateToken } = require("../middleware/auth");
 
 //register;
 exports.createAdmin = async function (req, res) {
@@ -36,8 +37,13 @@ exports.loginAdmin = async function (req, res) {
   const validPass = await bcrypt.compareSync(req.body.password, admin.password);
   if (!validPass) return res.status(400).json("invalid password");
 
-  //create and assign a token
-  const token = jwt.sign({ _id: admin._id }, process.env.TOKEN_SECRET);
-  admin.token = token;
-  return res.status(200).json({ admin: admin.email, token: token });
+  try {
+    const { token, error } = await generateToken(admin);
+    res.status(200).json({
+      data: admin,
+      token,
+    });
+  } catch (err) {
+    res.status(400).json({ message: "bad request" });
+  }
 };

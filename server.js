@@ -10,7 +10,7 @@ const adminRoute = require("./routes/admin");
 const userRoute = require("./routes/user");
 
 (async function db() {
-  await connection();
+  connection();
 })();
 
 app.use(cors());

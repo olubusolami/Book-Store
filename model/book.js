@@ -19,9 +19,10 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    purchaseCount: {
+    borrowed: {
       type: Number,
       required: true,
+      default: 0,
     },
     imageUrl: {
       type: String,
@@ -31,9 +32,14 @@ const bookSchema = new mongoose.Schema(
       type: Array,
       required: true,
     },
+    noOfBooks: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
   },
   {
     timestamps: true,
   }
 );
-module.exports = mongoose.model("Book", bookSchema);
+module.exports = mongoose.model("books", bookSchema);
