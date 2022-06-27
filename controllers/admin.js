@@ -27,16 +27,6 @@ exports.createAdmin = async function (req, res) {
   }
 };
 
-exports.adminToken = async function (req, res) {
-  const token = await token.findOne({ token: req.params.token });
-  // token is not found into database i.e. token may have expired
-  if (!token) {
-    return res.status(400).send({
-      msg: "not valid",
-    });
-  }
-};
-
 //login
 exports.loginAdmin = async function (req, res) {
   //checking if the email exists
@@ -47,11 +37,13 @@ exports.loginAdmin = async function (req, res) {
   const validPass = await bcrypt.compareSync(req.body.password, admin.password);
   if (!validPass) return res.status(400).json("invalid password");
 
-  const { token, error } = await generateToken(admin);
-  if (error) res.send(error);
-
-  res.status(200).json({
-    data: admin,
-    token: adminToken,
-  });
+  try {
+    const { token, error } = await generateToken(admin);
+    res.status(200).json({
+      data: admin,
+      token,
+    });
+  } catch (err) {
+    res.status(400).json({ message: "bad request" });
+  }
 };
